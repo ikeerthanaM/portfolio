@@ -1,0 +1,898 @@
+/* =========================================================
+   DESIGN TOKENS & TYPOGRAPHY
+   ========================================================= */
+:root {
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Ocean Depth Gradient Palette */
+  --sky-sunlit: #E0F2FE;
+  --reef-shallow: #0284C7;
+  --blue-pelagic: #0369A1;
+  --abyss-midnight: #0F172A;
+  --seabed-dark: #020617;
+
+  --ink-surface: #0F172A;
+  --ink-surface-muted: #334155;
+  --ink-light: #F8FAFC;
+  --ink-light-muted: #CBD5E1;
+  --brass-gold: #FBBF24;
+  --brass-deep: #D97706;
+  --biolum-cyan: #38BDF8;
+
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --max-width: 1120px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink-light);
+  background-color: var(--seabed-dark);
+  line-height: 1.65;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =========================================================
+   FLOATING DEPTH NAVIGATION
+   ========================================================= */
+.site-nav {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  width: min(calc(100% - 32px), var(--max-width));
+  height: 52px;
+  padding: 0 18px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  background: rgba(248, 250, 252, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  color: var(--ink-surface);
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+.site-nav.is-submerged {
+  background: rgba(15, 23, 42, 0.65);
+  border-color: rgba(224, 242, 254, 0.14);
+  color: var(--ink-light);
+}
+
+.nav-brand {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.nav-links a {
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+}
+
+.nav-links a:hover {
+  opacity: 1;
+}
+
+.depth-meter {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(2, 132, 199, 0.12);
+}
+
+.site-nav.is-submerged .depth-meter {
+  background: rgba(56, 189, 248, 0.14);
+  color: var(--biolum-cyan);
+}
+
+/* =========================================================
+   ACT 1: ONE CONTINUOUS COASTLINE STAGE
+   ========================================================= */
+.surface-stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 620px;
+  background-color: var(--sky-sunlit);
+  overflow: hidden;
+}
+
+.coast-track {
+  position: relative;
+  width: max(200vw, 1360px);
+  height: 100%;
+  will-change: transform;
+}
+
+.unified-coast-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Shore Intro Bio Positioned Over Left Coastline */
+.shore-copy {
+  position: absolute;
+  top: clamp(86px, 13vh, 132px);
+  left: clamp(20px, 5vw, 84px);
+  z-index: 10;
+  width: min(440px, calc(100vw - 40px));
+  padding: 22px 26px;
+  border-radius: var(--radius-md);
+  background: rgba(224, 242, 254, 0.76);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  color: var(--ink-surface);
+}
+
+.shore-eyebrow {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue-pelagic);
+  margin-bottom: 6px;
+}
+
+.shore-copy h1 {
+  font-size: clamp(2rem, 3.6vw, 2.95rem);
+  color: var(--ink-surface);
+  margin-bottom: 10px;
+}
+
+.shore-copy p {
+  margin: 0 0 16px;
+  font-size: 0.96rem;
+  color: var(--ink-surface-muted);
+}
+
+.shore-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.shore-link {
+  font-size: 0.83rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--ink-surface);
+  color: var(--ink-light);
+  transition: transform 0.2s ease;
+}
+
+.shore-link.is-secondary {
+  background: rgba(15, 23, 42, 0.08);
+  color: var(--ink-surface);
+}
+
+.shore-link:hover {
+  transform: translateY(-1px);
+}
+
+/* Epigraph Centered Above Boat Near End of Coast Pan */
+.sea-caption {
+  position: absolute;
+  top: clamp(104px, 16vh, 160px);
+  right: clamp(20px, 50vw - 230px, 50vw - 230px);
+  z-index: 10;
+  width: min(460px, calc(100vw - 40px));
+  text-align: center;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.sea-epigraph {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2vw, 1.42rem);
+  color: var(--ink-surface);
+  margin: 0 0 8px;
+}
+
+.sea-sub {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-pelagic);
+}
+
+.scroll-cue {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-light);
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.42);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+}
+
+.scroll-arrow {
+  animation: bobDown 1.8s ease-in-out infinite;
+}
+
+@keyframes bobDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
+/* =========================================================
+   ACT 2: THE DESCENT (Shallow Reef -> Seabed)
+   ========================================================= */
+.descent-world {
+  position: relative;
+  background-color: var(--reef-shallow);
+}
+
+.depth-section {
+  position: relative;
+  padding: 112px 24px;
+}
+
+.section-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.section-header {
+  max-width: 620px;
+  margin-bottom: 56px;
+}
+
+.centered-header {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.depth-tag {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brass-gold);
+  margin-bottom: 10px;
+}
+
+.section-header h2 {
+  font-size: clamp(2rem, 3.6vw, 2.9rem);
+  color: var(--ink-light);
+  margin-bottom: 14px;
+}
+
+.section-lead {
+  margin: 0;
+  font-size: 1.02rem;
+  color: rgba(248, 250, 252, 0.84);
+}
+
+/* =========================================================
+   2A. EDUCATION — DIRECTLY BELOW BOAT SOUNDING LINE
+   ========================================================= */
+.education-section {
+  padding-top: 72px;
+}
+
+.sounding-lead-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72px;
+  display: block;
+  pointer-events: none;
+}
+
+.lead-mobile {
+  display: none;
+}
+
+.sounding-stage {
+  position: relative;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 12px 0 36px;
+}
+
+.sounding-line-track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sounding-line {
+  width: 1.5px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(251, 191, 36, 0.95),
+    rgba(251, 191, 36, 0.65) 85%,
+    rgba(251, 191, 36, 0.95)
+  );
+  transform-origin: top center;
+}
+
+.sounding-weight {
+  margin-top: -2px;
+  filter: drop-shadow(0 4px 10px rgba(251, 191, 36, 0.35));
+}
+
+.education-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.edu-milestone {
+  position: relative;
+  width: calc(50% - 40px);
+  padding: 24px 26px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(224, 242, 254, 0.18);
+  backdrop-filter: blur(6px);
+}
+
+.edu-milestone:nth-child(odd) {
+  align-self: flex-start;
+}
+
+.edu-milestone:nth-child(even) {
+  align-self: flex-end;
+}
+
+.edu-knot {
+  position: absolute;
+  top: 28px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #FEF3C7, var(--brass-gold) 65%, var(--brass-deep));
+  border: 2px solid rgba(2, 132, 199, 0.95);
+  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.2), 0 0 18px rgba(251, 191, 36, 0.55);
+}
+
+.edu-milestone:nth-child(odd) .edu-knot {
+  right: -49px;
+}
+
+.edu-milestone:nth-child(even) .edu-knot {
+  left: -49px;
+}
+
+.edu-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.edu-year {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #FEF3C7;
+}
+
+.edu-depth-mark {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(224, 242, 254, 0.75);
+}
+
+.edu-milestone h3 {
+  font-size: 1.32rem;
+  margin-bottom: 4px;
+  color: var(--ink-light);
+}
+
+.edu-institution {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #BAE6FD;
+  margin-bottom: 8px;
+}
+
+.edu-focus {
+  margin: 0;
+  font-size: 0.92rem;
+  color: rgba(248, 250, 252, 0.85);
+}
+
+/* =========================================================
+   2B. SKILLS & INTERESTS — WOVEN NET GRID & SHOALS
+   ========================================================= */
+.skills-section {
+  overflow: hidden;
+}
+
+.shoal-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.fish-shoal {
+  position: absolute;
+}
+
+.shoal-left {
+  top: 12%;
+  left: -4%;
+}
+
+.shoal-right {
+  bottom: 14%;
+  right: -4%;
+}
+
+.net-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.net-panel {
+  padding: 30px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(224, 242, 254, 0.2);
+  background-color: rgba(3, 105, 161, 0.35);
+  background-image:
+    linear-gradient(to right, rgba(224, 242, 254, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(224, 242, 254, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.net-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(224, 242, 254, 0.16);
+}
+
+.net-panel-head h3 {
+  font-size: 1.4rem;
+}
+
+.net-knot-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(224, 242, 254, 0.25);
+  color: #E0F2FE;
+}
+
+.pill-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.net-pill {
+  font-size: 0.86rem;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.28);
+  border: 1px solid rgba(224, 242, 254, 0.22);
+  color: var(--ink-light);
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.net-pill:hover {
+  border-color: rgba(251, 191, 36, 0.65);
+  background: rgba(15, 23, 42, 0.45);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   2C. PROJECTS — DARK-GLASS CARDS
+   ========================================================= */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px;
+  border-radius: var(--radius-md);
+  background: rgba(15, 23, 42, 0.56);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(56, 189, 248, 0.48);
+  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.45), 0 0 24px rgba(56, 189, 248, 0.12);
+}
+
+.project-card h3 {
+  font-size: 1.42rem;
+  margin-bottom: 10px;
+}
+
+.project-summary {
+  margin: 0 0 18px;
+  font-size: 0.94rem;
+  color: var(--ink-light-muted);
+}
+
+.project-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.stack-tag {
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.1);
+  color: #7DD3FC;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.project-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(224, 242, 254, 0.08);
+}
+
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #BAE6FD;
+  transition: color 0.2s ease;
+}
+
+.project-link:hover {
+  color: var(--brass-gold);
+}
+
+/* =========================================================
+   2D. ARTICLES — THE SEABED
+   ========================================================= */
+.articles-section {
+  padding-bottom: 150px;
+}
+
+.articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.article-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px;
+  border-radius: var(--radius-md);
+  background: rgba(2, 6, 23, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  cursor: pointer;
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.article-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(251, 191, 36, 0.45);
+}
+
+.article-bottle-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.article-meta {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94A3B8;
+}
+
+.article-card h3 {
+  font-size: 1.38rem;
+  margin-bottom: 12px;
+}
+
+.article-excerpt {
+  margin: 0 0 22px;
+  font-size: 0.93rem;
+  color: var(--ink-light-muted);
+}
+
+.read-trigger {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--brass-gold);
+}
+
+.seabed-floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 92px;
+  pointer-events: none;
+}
+
+.seabed-floor svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.seabed-footer {
+  background: #000208;
+  padding: 28px 24px 40px;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.footer-note {
+  margin: 0;
+  font-size: 0.84rem;
+  color: #64748B;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94A3B8;
+}
+
+.footer-links a:hover {
+  color: var(--ink-light);
+}
+
+/* =========================================================
+   ARTICLE READER MODAL
+   ========================================================= */
+.reader-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.reader-modal.is-open {
+  display: flex;
+}
+
+.reader-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.86);
+  backdrop-filter: blur(8px);
+}
+
+.reader-sheet {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 740px;
+  max-height: min(88vh, 860px);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  background: #0B1221;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65);
+  overflow: hidden;
+}
+
+.reader-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 26px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.reader-meta {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--brass-gold);
+}
+
+.reader-close {
+  appearance: none;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink-light);
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.reader-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.reader-content {
+  padding: 36px clamp(22px, 5vw, 48px) 48px;
+  overflow-y: auto;
+}
+
+.reader-title {
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  color: var(--ink-light);
+  margin-bottom: 24px;
+}
+
+.reader-body p {
+  margin: 0 0 1.25em;
+  font-size: 1.04rem;
+  line-height: 1.8;
+  color: #E2E8F0;
+  max-width: 64ch;
+}
+
+.reader-body blockquote {
+  margin: 1.6em 0;
+  padding-left: 18px;
+  border-left: 2px solid var(--brass-gold);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.12rem;
+  color: #FEF3C7;
+}
+
+/* =========================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================= */
+@media (max-width: 820px) {
+  .nav-links {
+    display: none;
+  }
+
+  .net-grid,
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .shore-copy {
+    padding: 18px 20px;
+  }
+
+  .lead-desktop {
+    display: none;
+  }
+
+  .lead-mobile {
+    display: block;
+  }
+
+  .sounding-stage {
+    padding-left: 38px;
+  }
+
+  .sounding-line-track {
+    left: calc(6vw - 12px);
+    transform: none;
+  }
+
+  .edu-milestone {
+    width: 100%;
+    align-self: stretch !important;
+  }
+
+  .edu-milestone .edu-knot {
+    left: -34px !important;
+    right: auto !important;
+  }
+}
