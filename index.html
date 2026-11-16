@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aarav Mehta — Software Engineer &amp; Essayist</title>
+  <meta name="description" content="Continuous coastal literary portfolio inspired by The Old Man and the Sea and The Kite Runner." />
+
+  <!-- Typography: Fraunces (Literary Serif) & Plus Jakarta Sans (UI / Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Subtle Floating Depth Navigation -->
+  <header class="site-nav" id="site-nav" aria-label="Primary navigation">
+    <a href="#surface-stage" class="nav-brand" id="nav-brand"></a>
+    <nav class="nav-links" aria-label="Ocean depths">
+      <a href="#surface-stage">Coast</a>
+      <a href="#education">Sounding</a>
+      <a href="#skills">The Net</a>
+      <a href="#projects">The Trench</a>
+      <a href="#articles">Abyss</a>
+    </nav>
+    <div class="depth-meter" aria-hidden="true">
+      <span id="depth-readout">0m</span>
+    </div>
+  </header>
+
+  <main id="ocean-world">
+    <!-- =====================================================
+         ACT 1: ONE SEAMLESS COASTLINE (Shore -> Open Sea)
+         Pinned Scroll Camera pans rightwards across the sand
+         into the water, stopping directly above the sounding line.
+         ===================================================== -->
+    <section id="surface-stage" class="surface-stage" aria-label="Continuous coastline from sandy shore to open sea">
+      <div class="coast-track" id="coast-track">
+
+        <!-- Intro Bio Resting on the Shore Horizon (Injected by app.js) -->
+        <div class="shore-copy" id="shore-bio"></div>
+
+        <!-- Epigraph Appearing Over Open Water (Injected by app.js) -->
+        <div class="sea-caption" id="sea-caption"></div>
+
+        <!-- ONE UNIFIED SVG COASTAL WORLD -->
+        <svg id="unified-coast-svg" class="unified-coast-svg" aria-labelledby="coast-world-title">
+          <title id="coast-world-title">Continuous minimalist illustration of a sandy shore sloping into the sea, with a boy flying a blue kite on the left and an old fisherman in a wooden skiff on the right</title>
+          <defs>
+            <!-- Sunlit Sky Gradient -->
+            <linearGradient id="sky-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#E0F2FE" />
+              <stop offset="82%" stop-color="#BAE6FD" />
+              <stop offset="100%" stop-color="#E0F2FE" />
+            </linearGradient>
+
+            <!-- Continuous Water: Shallow Reef Turquoise -> Open Sea Cerulean -->
+            <linearGradient id="water-horiz-grad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#38BDF8" />
+              <stop offset="42%" stop-color="#0EA5E9" />
+              <stop offset="72%" stop-color="#0284C7" />
+              <stop offset="100%" stop-color="#0284C7" />
+            </linearGradient>
+
+            <!-- Vertical Water Blending to Match #education Top (#0284C7) -->
+            <linearGradient id="water-depth-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0284C7" stop-opacity="0" />
+              <stop offset="100%" stop-color="#0284C7" stop-opacity="1" />
+            </linearGradient>
+
+            <!-- Golden Sand Shoreline Slope -->
+            <linearGradient id="sand-grad" x1="0" y1="0" x2="1" y2="0.6">
+              <stop offset="0%" stop-color="#F2DFB8" />
+              <stop offset="60%" stop-color="#E6CA96" />
+              <stop offset="100%" stop-color="#C9A871" stop-opacity="0.3" />
+            </linearGradient>
+          </defs>
+
+          <!-- Sky & Sun -->
+          <rect id="sky-rect" x="0" y="0" fill="url(#sky-grad)" />
+          <g id="sky-details"></g>
+
+          <!-- Continuous Ocean Body -->
+          <rect id="water-rect" x="0" fill="url(#water-horiz-grad)" />
+          <rect id="water-depth-overlay" x="0" fill="url(#water-depth-grad)" />
+
+          <!-- Submerged & Above-Water Continuous Golden Sand Coastline -->
+          <path id="sand-underwater-path" fill="#D5B982" opacity="0.28" />
+          <path id="sand-shore-path" fill="url(#sand-grad)" />
+          <path id="sand-ridge-path" fill="#DEC28E" opacity="0.55" />
+          <path id="surf-foam-path" fill="none" stroke="#F0F9FF" stroke-width="2.2" stroke-linecap="round" opacity="0.72" />
+          <g id="dune-grass"></g>
+
+          <!-- Back Animated Waves Across Entire Waterline -->
+          <path id="waves-back" fill="#0369A1" opacity="0.24" />
+
+          <!-- Boy on the Connected Sandy Shore (Kite Runner Inspired) -->
+          <g id="boy-anchor">
+            <g id="boy-figure">
+              <ellipse cx="10" cy="64" rx="17" ry="3.5" fill="#BA9B68" opacity="0.65" />
+              <path d="M6 38 L2 62 L7 62 L10 40" fill="#1E293B" />
+              <path d="M12 38 L16 62 L21 62 L16 38" fill="#334155" />
+              <path d="M4 17 Q10 14 17 17 L19 42 L2 42 Z" fill="#475569" />
+              <path d="M6 16 Q11 19 16 16 L13 24 L8 22 Z" fill="#0284C7" />
+              <circle cx="11" cy="9" r="5.5" fill="#C69472" />
+              <path d="M5.5 8 Q7 2.5 13 3.5 Q17 4.5 16.5 9 Q13 6.5 6 8 Z" fill="#0F172A" />
+              <path d="M14 19 L25 11" stroke="#475569" stroke-width="3.2" stroke-linecap="round" />
+              <circle cx="26" cy="10" r="1.8" fill="#C69472" />
+              <rect x="25" y="7.5" width="3" height="4.5" rx="0.8" fill="#78533A" />
+            </g>
+          </g>
+
+          <!-- Long Thin Kite Thread & Interactive Blue Diamond Kite -->
+          <path id="kite-string" fill="none" stroke="#1E293B" stroke-width="0.95" stroke-opacity="0.72" />
+          <g id="kite-group" style="cursor: grab;">
+            <circle cx="0" cy="0" r="34" fill="transparent" />
+            <path id="kite-tail" d="M0 18 Q-6 30 -2 42 Q4 52 -3 62" fill="none" stroke="#0369A1" stroke-width="1" stroke-linecap="round" />
+            <path d="M-4 32 L1 34 L-3 36 Z" fill="#38BDF8" />
+            <path d="M-1 47 L4 49 L0 51 Z" fill="#0284C7" />
+            <polygon points="0,-18 -13,-2 0,0" fill="#38BDF8" />
+            <polygon points="0,-18 13,-2 0,0" fill="#0284C7" />
+            <polygon points="-13,-2 0,18 0,0" fill="#0284C7" />
+            <polygon points="13,-2 0,18 0,0" fill="#0369A1" />
+            <line x1="0" y1="-18" x2="0" y2="18" stroke="#E0F2FE" stroke-width="0.75" opacity="0.85" />
+            <line x1="-13" y1="-2" x2="13" y2="-2" stroke="#E0F2FE" stroke-width="0.75" opacity="0.85" />
+          </g>
+
+          <!-- Sleek Dark-Navy Shark Circling Beneath the Boat -->
+          <g id="shark-anchor">
+            <g id="shark-swim">
+              <path d="M-54 2 Q-26 -7 6 -6 L13 -20 L22 -5 Q48 -2 72 3 Q50 8 24 8 L15 15 L10 8 Q-18 9 -42 5 L-58 14 L-50 2 L-60 -8 Z" fill="#0F172A" opacity="0.85" />
+              <path d="M28 0 L26 4 M32 0 L30 4" stroke="#38BDF8" stroke-width="0.65" opacity="0.35" />
+            </g>
+          </g>
+
+          <!-- Taut Brass Sounding Line Dropping Directly from Beneath the Boat's Hull -->
+          <line id="boat-sounding-line" stroke="#FBBF24" stroke-width="1.6" stroke-opacity="0.88" />
+
+          <!-- Santiago in His Weathered Wooden Skiff -->
+          <g id="skiff-anchor">
+            <g id="skiff-group">
+              <ellipse cx="0" cy="14" rx="76" ry="3.5" fill="#0369A1" opacity="0.38" />
+              <line x1="-64" y1="-2" x2="54" y2="-4" stroke="#9A7B56" stroke-width="1.8" stroke-linecap="round" />
+
+              <!-- Fisherman Seated Inside Boat -->
+              <g id="fisherman" transform="translate(-8, -36)">
+                <path d="M-8 14 Q0 10 9 14 L12 34 L-10 34 Z" fill="#CBD5E1" />
+                <circle cx="1" cy="7" r="5" fill="#BD8864" />
+                <path d="M-11 5 Q1 2 13 5" stroke="#D6B583" stroke-width="2.2" stroke-linecap="round" />
+                <path d="M-5 4 L-3 -1 L5 -1 L7 4 Z" fill="#C9A46E" />
+                <!-- Pocket Logbook -->
+                <polygon points="8,24 17,22 19,27 10,29" fill="#F8FAFC" stroke="#64748B" stroke-width="0.5" />
+                <!-- Arm & Hand -->
+                <path d="M4 16 L11 22 L15 22" fill="none" stroke="#CBD5E1" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="15.5" cy="22" r="1.6" fill="#BD8864" />
+                <!-- Strictly Realistic Normal-Sized Fountain Pen (~9px) -->
+                <g transform="translate(15.5, 22) rotate(32)">
+                  <rect x="-5" y="-0.6" width="8.5" height="1.2" rx="0.4" fill="#0F172A" />
+                  <polygon points="3.5,-0.5 5.6,0 3.5,0.5" fill="#F59E0B" />
+                </g>
+              </g>
+
+              <!-- Skiff Hull -->
+              <path d="M-82 -4 Q-40 2 0 1 Q46 1 86 -7 L68 12 Q0 15 -66 11 Z" fill="#78533A" />
+              <path d="M-82 -4 Q0 1 86 -7 L82 -2 Q0 5 -78 1 Z" fill="#9A6F4E" />
+              <path d="M-66 6 Q0 9 68 6" fill="none" stroke="#5C3D28" stroke-width="0.9" />
+            </g>
+          </g>
+
+          <!-- Front Animated Wave Crest Along Entire Waterline -->
+          <path id="waves-front" fill="#0284C7" opacity="0.72" />
+          <path id="waves-glint" fill="none" stroke="#BAE6FD" stroke-width="1.2" opacity="0.55" />
+        </svg>
+
+        <div class="scroll-cue" id="scroll-cue" aria-hidden="true">
+          <span>Scroll to follow the coast &amp; dive below</span>
+          <span class="scroll-arrow">&darr;</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         ACT 2: THE DESCENT (Directly Beneath Boat Hull -> Seabed)
+         ===================================================== -->
+    <div id="descent-world" class="descent-world">
+
+      <!-- 2A. UPPER SUB-SURFACE: EDUCATION (Linear Weighted Sounding Line) -->
+      <section id="education" class="depth-section education-section" aria-labelledby="edu-heading">
+        <!-- Seamless Sounding Line Lead-in Directly From Boat Hull -->
+        <svg class="sounding-lead-svg" viewBox="0 0 100 72" preserveAspectRatio="none" aria-hidden="true">
+          <line class="lead-desktop" x1="50" y1="0" x2="50" y2="72" stroke="#FBBF24" stroke-width="1.5" vector-effect="non-scaling-stroke" />
+          <path class="lead-mobile" d="M50 0 C50 38, 6 28, 6 72" fill="none" stroke="#FBBF24" stroke-width="1.5" vector-effect="non-scaling-stroke" />
+        </svg>
+
+        <div class="section-inner">
+          <header class="section-header centered-header">
+            <span class="depth-tag">20m &mdash; Shallow Reef</span>
+            <h2 id="edu-heading">The Sounding Line</h2>
+            <p class="section-lead">
+              Directly beneath the skiff, a taut weighted line drops straight into the reef—each brass knot marking depth gained.
+            </p>
+          </header>
+
+          <div class="sounding-stage">
+            <div class="sounding-line-track" aria-hidden="true">
+              <div class="sounding-line" id="sounding-line"></div>
+              <div class="sounding-weight">
+                <svg width="20" height="28" viewBox="0 0 20 28">
+                  <circle cx="10" cy="4" r="2.5" fill="none" stroke="#FBBF24" stroke-width="1.4" />
+                  <path d="M7 7 L13 7 L15 22 L10 27 L5 22 Z" fill="#D97706" stroke="#FDE68A" stroke-width="0.9" />
+                </svg>
+              </div>
+            </div>
+
+            <ol class="education-list" id="education-list"></ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2B. MID-DEPTH: SKILLS & INTERESTS (Woven Nautical Net & Fish Shoals) -->
+      <section id="skills" class="depth-section skills-section" aria-labelledby="skills-heading">
+        <div class="shoal-layer" aria-hidden="true">
+          <svg class="fish-shoal shoal-left" viewBox="0 0 240 90" width="240" height="90">
+            <g fill="#E0F2FE" opacity="0.16">
+              <path d="M20 25 Q35 17 50 25 Q35 33 20 25 L12 20 L14 25 L12 30 Z" />
+              <path d="M62 18 Q74 12 86 18 Q74 24 62 18 L56 14 L57 18 L56 22 Z" />
+              <path d="M48 44 Q64 36 80 44 Q64 52 48 44 L40 39 L42 44 L40 49 Z" />
+              <path d="M98 34 Q112 27 126 34 Q112 41 98 34 L91 30 L93 34 L91 38 Z" />
+              <path d="M78 64 Q90 58 102 64 Q90 70 78 64 L72 60 L73 64 L72 68 Z" />
+            </g>
+          </svg>
+          <svg class="fish-shoal shoal-right" viewBox="0 0 220 80" width="220" height="80">
+            <g fill="#E0F2FE" opacity="0.14">
+              <path d="M180 24 Q165 16 150 24 Q165 32 180 24 L188 19 L186 24 L188 29 Z" />
+              <path d="M140 44 Q126 37 112 44 Q126 51 140 44 L147 40 L145 44 L147 48 Z" />
+              <path d="M196 52 Q184 46 172 52 Q184 58 196 52 L202 48 L201 52 L202 56 Z" />
+            </g>
+          </svg>
+        </div>
+
+        <div class="section-inner">
+          <header class="section-header">
+            <span class="depth-tag">240m &mdash; Pelagic Blue</span>
+            <h2 id="skills-heading">The Woven Net</h2>
+            <p class="section-lead">
+              Where engineering craft and literary curiosity cross threads inside a taut nautical mesh.
+            </p>
+          </header>
+
+          <div class="net-grid">
+            <article class="net-panel" aria-labelledby="tech-skills-title">
+              <div class="net-panel-head">
+                <h3 id="tech-skills-title">Technical Craft</h3>
+                <span class="net-knot-badge">Warp</span>
+              </div>
+              <ul class="pill-list" id="skills-list"></ul>
+            </article>
+
+            <article class="net-panel" aria-labelledby="interests-title">
+              <div class="net-panel-head">
+                <h3 id="interests-title">Curiosities &amp; Reading</h3>
+                <span class="net-knot-badge">Weft</span>
+              </div>
+              <ul class="pill-list" id="interests-list"></ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2C. DEEP WATER: PROJECTS SHOWCASE (Dark-Glass Vessels) -->
+      <section id="projects" class="depth-section projects-section" aria-labelledby="projects-heading">
+        <div class="section-inner">
+          <header class="section-header">
+            <span class="depth-tag">1,800m &mdash; Midnight Abyss</span>
+            <h2 id="projects-heading">Deep-Water Vessels</h2>
+            <p class="section-lead">
+              Selected engineering systems and creative tools built to endure pressure in deep waters.
+            </p>
+          </header>
+
+          <div class="projects-grid" id="projects-grid"></div>
+        </div>
+      </section>
+
+      <!-- 2D. THE SEABED: ARTICLES & WRITING (Sunken Manuscripts) -->
+      <section id="articles" class="depth-section articles-section" aria-labelledby="articles-heading">
+        <div class="section-inner">
+          <header class="section-header">
+            <span class="depth-tag">4,000m &mdash; The Seabed</span>
+            <h2 id="articles-heading">Sunken Manuscripts</h2>
+            <p class="section-lead">
+              Essays and field notes preserved along the ocean floor—click any manuscript to read in full.
+            </p>
+          </header>
+
+          <div class="articles-grid" id="articles-grid"></div>
+        </div>
+
+        <div class="seabed-floor" aria-hidden="true">
+          <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path d="M0 78 Q220 42 460 72 T960 64 T1440 82 L1440 120 L0 120 Z" fill="#01040F" />
+            <path d="M0 95 Q340 70 700 94 T1440 88 L1440 120 L0 120 Z" fill="#000208" />
+          </svg>
+        </div>
+      </section>
+
+      <footer class="seabed-footer">
+        <div class="section-inner footer-inner">
+          <p class="footer-note" id="footer-note"></p>
+          <div class="footer-links" id="footer-links"></div>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- DISTRACTION-FREE FULL-ARTICLE READING MODAL -->
+  <div id="article-modal" class="reader-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="reader-backdrop" id="modal-backdrop"></div>
+    <article class="reader-sheet">
+      <header class="reader-topbar">
+        <span class="reader-meta" id="modal-meta"></span>
+        <button type="button" class="reader-close" id="modal-close" aria-label="Close article reader">
+          Close &times;
+        </button>
+      </header>
+      <div class="reader-content">
+        <h2 class="reader-title" id="modal-title"></h2>
+        <div class="reader-body" id="modal-body"></div>
+      </div>
+    </article>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
