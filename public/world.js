@@ -21,7 +21,7 @@ document.getElementById('close-reader').addEventListener('click', () => {
 const WORLD_BOUNDS = {
   minX: -1150,
   maxX: 1450,
-  minY: -380,
+  minY: -560,
   maxY: 3350
 };
 
@@ -135,7 +135,6 @@ const fishes = FISH_STAGES.map((stage, idx) => ({
   isOpen: false
 }));
 
-// Active visual states for each of the 7 bespoke reveals
 const activeReveals = {
   education: { open: false, progress: 0, items: [] },
   interests: { open: false, progress: 0, items: [] },
@@ -148,11 +147,9 @@ const activeReveals = {
 
 async function onFishClick(fish) {
   fish.selectedPulse = 1.0;
-  // Refresh latest data from API so admin edits reflect immediately
   await fetchPortfolioData();
   const items = portfolioData[fish.key] || [];
 
-  // Toggle closed if already open
   if (fish.isOpen) {
     fish.isOpen = false;
     closeReveal(fish.key);
@@ -162,13 +159,10 @@ async function onFishClick(fish) {
   fish.isOpen = true;
 
   if (fish.key === 'education') {
-    // 1. Education: Long timeline thread spat out from fish's mouth
     activeReveals.education = { open: true, progress: 0, items };
   } else if (fish.key === 'interests') {
-    // 2. Interests: Sunken stone/parchment tablets on a rocky underwater ledge
     activeReveals.interests = { open: true, progress: 0, items };
   } else if (fish.key === 'skills') {
-    // 3. Skills: Pop-up bubbles floating around the fish
     activeReveals.skills = {
       open: true,
       bubbles: items.map((item, i) => ({
@@ -180,7 +174,6 @@ async function onFishClick(fish) {
       }))
     };
   } else if (fish.key === 'projects') {
-    // 4. Projects: Interactive Sonar / Compass cards with clickable live links
     activeReveals.projects = {
       open: true,
       cards: items.map((item, i) => ({
@@ -191,7 +184,6 @@ async function onFishClick(fish) {
     };
     syncDomOverlays();
   } else if (fish.key === 'achievements') {
-    // 5. Achievements: Sunken brass treasure chest on a deep rocky shelf bursting with golden medallions
     activeReveals.achievements = {
       open: true,
       progress: 0,
@@ -200,7 +192,6 @@ async function onFishClick(fish) {
       chestY: fish.depthY + 135
     };
   } else if (fish.key === 'digitalFootprints') {
-    // 6. Digital Footprints: Glowing pearl/plankton orbs grouped by category
     activeReveals.digitalFootprints = {
       open: true,
       orbs: items.map((item, i) => ({
@@ -212,7 +203,6 @@ async function onFishClick(fish) {
     };
     syncDomOverlays();
   } else if (fish.key === 'articles') {
-    // 7. Articles: Message in a bottle — each article falls in its own corked bottle!
     activeReveals.articles = {
       open: true,
       bottles: items.map((item, i) => ({
@@ -245,7 +235,6 @@ function closeReveal(key) {
   if (key === 'articles') activeReveals.articles.open = false;
 }
 
-// Sync HTML overlays for Sonar Project Cards & Glowing Pearl Links
 function syncDomOverlays() {
   overlayEl.innerHTML = '';
 
@@ -314,17 +303,20 @@ function openArticleBottle(article) {
 }
 
 // ==========================================
-// 3. RANDOM OCEAN WAVES ENGINE
+// 3. RANDOM OCEAN WAVES & BOAT RIPPLES ENGINE
 // ==========================================
 const waveState = {
-  currentAmplitude: 7,
-  targetAmplitude: 7,
+  currentAmplitude: 8,
+  targetAmplitude: 8,
   nextEventTimer: 3.5,
   phase: 0
 };
 
+const boatRipples = [];
+let rippleSpawnTimer = 0;
+
 function updateWaves(dt) {
-  waveState.phase += dt * 1.8;
+  waveState.phase += dt * 1.85;
   waveState.nextEventTimer -= dt;
 
   if (waveState.nextEventTimer <= 0) {
@@ -342,6 +334,27 @@ function updateWaves(dt) {
   }
 
   waveState.currentAmplitude += (waveState.targetAmplitude - waveState.currentAmplitude) * dt * 1.4;
+
+  // Spawn continuous surface ripples around the wooden boat
+  rippleSpawnTimer -= dt;
+  if (rippleSpawnTimer <= 0) {
+    rippleSpawnTimer = 0.75;
+    boatRipples.push({
+      x: boat.x + (Math.random() - 0.5) * 30,
+      y: boat.y + 10,
+      rx: 48,
+      ry: 5,
+      alpha: 0.65
+    });
+  }
+
+  for (let i = boatRipples.length - 1; i >= 0; i--) {
+    const r = boatRipples[i];
+    r.rx += 44 * dt;
+    r.ry += 4.5 * dt;
+    r.alpha -= 0.38 * dt;
+    if (r.alpha <= 0) boatRipples.splice(i, 1);
+  }
 }
 
 function getWaterSurfaceY(worldX) {
@@ -472,19 +485,19 @@ function updateShark(dt) {
     shark.state = 'stunned';
     shark.dir = shark.x >= boat.x ? 1 : -1;
     oldMan.hitCooldown = 0.7;
-    spawnSplash(shark.x, shark.y, 12);
+    spawnSplash(shark.x, shark.y, 14);
   }
 }
 
 // ==========================================
-// 5. SEASHORE BOY & BLUE KITE
+// 5. SEASHORE BOY & LONGER BLUE KITE THREAD
 // ==========================================
 const kiteScene = {
   boyX: -480,
   boyY: -22,
-  kiteBaseX: -240,
+  kiteBaseX: -230, // Extended further & higher for a long kite thread
   kiteBaseY: -410,
-  kiteX: -240,
+  kiteX: -230,
   kiteY: -410,
   wobbleAmp: 4,
   wobblePhase: 0
@@ -493,14 +506,36 @@ const kiteScene = {
 function updateKite(dt) {
   kiteScene.wobblePhase += dt * 11;
   kiteScene.wobbleAmp += (4 - kiteScene.wobbleAmp) * dt * 2.2;
-  kiteScene.kiteX = kiteScene.kiteBaseX + Math.sin(kiteScene.wobblePhase * 0.4) * (10 + kiteScene.wobbleAmp * 0.6);
-  kiteScene.kiteY = kiteScene.kiteBaseY + Math.cos(kiteScene.wobblePhase * 0.3) * (6 + kiteScene.wobbleAmp * 0.4);
+  kiteScene.kiteX = kiteScene.kiteBaseX + Math.sin(kiteScene.wobblePhase * 0.4) * (12 + kiteScene.wobbleAmp * 0.65);
+  kiteScene.kiteY = kiteScene.kiteBaseY + Math.cos(kiteScene.wobblePhase * 0.3) * (8 + kiteScene.wobbleAmp * 0.45);
 }
 
 // ==========================================
-// 6. AMBIENT UNDERWATER PARTICLES
+// 6. LIVELY AMBIENT ECOSYSTEM (CLOUDS, BIRDS, MINNOWS, BUBBLES)
 // ==========================================
-const bubbles = Array.from({ length: 60 }, () => ({
+const clouds = Array.from({ length: 7 }, (_, i) => ({
+  x: -950 + i * 360,
+  y: -360 + (i % 3) * 65,
+  scale: 0.75 + (i % 3) * 0.35,
+  speed: 8 + (i % 4) * 3
+}));
+
+const seabirds = Array.from({ length: 5 }, (_, i) => ({
+  x: 100 + i * 240,
+  y: -250 - (i % 3) * 45,
+  phase: i * 1.4,
+  speed: 22 + i * 4
+}));
+
+const ambientMinnows = Array.from({ length: 18 }, (_, i) => ({
+  x: 100 + Math.random() * 1100,
+  y: 250 + i * 165,
+  speed: (i % 2 === 0 ? 1 : -1) * (18 + Math.random() * 22),
+  size: 4 + Math.random() * 4,
+  phase: Math.random() * Math.PI * 2
+}));
+
+const bubbles = Array.from({ length: 65 }, () => ({
   x: -200 + Math.random() * 1500,
   y: 80 + Math.random() * 3200,
   r: 1.5 + Math.random() * 4,
@@ -508,7 +543,7 @@ const bubbles = Array.from({ length: 60 }, () => ({
   wobble: Math.random() * Math.PI * 2
 }));
 
-const marineSnow = Array.from({ length: 95 }, () => ({
+const marineSnow = Array.from({ length: 105 }, () => ({
   x: -200 + Math.random() * 1600,
   y: 120 + Math.random() * 3200,
   size: 1 + Math.random() * 2.2,
@@ -533,7 +568,6 @@ function spawnSplash(x, y, count) {
 // 7. CLICK / TAP HIT DETECTION
 // ==========================================
 function handleWorldTap(wx, wy) {
-  // 1. Check Message-in-a-Bottle clicks first
   if (activeReveals.articles.open) {
     for (const bottle of activeReveals.articles.bottles) {
       if (Math.hypot(wx - bottle.x, wy - bottle.y) < 34) {
@@ -543,18 +577,16 @@ function handleWorldTap(wx, wy) {
     }
   }
 
-  // 2. Check Kite or Kite Thread
   const handX = kiteScene.boyX + 12;
   const handY = kiteScene.boyY - 34;
   if (
-    Math.hypot(wx - kiteScene.kiteX, wy - kiteScene.kiteY) < 45 ||
-    pointToSegmentDistance(wx, wy, handX, handY, kiteScene.kiteX, kiteScene.kiteY) < 24
+    Math.hypot(wx - kiteScene.kiteX, wy - kiteScene.kiteY) < 48 ||
+    pointToSegmentDistance(wx, wy, handX, handY, kiteScene.kiteX, kiteScene.kiteY) < 26
   ) {
-    kiteScene.wobbleAmp = 34;
+    kiteScene.wobbleAmp = 38;
     return;
   }
 
-  // 3. Check the 7 Underwater Fishes
   for (const fish of fishes) {
     const hitW = 78 * fish.size;
     const hitH = 40 * fish.size;
@@ -582,16 +614,18 @@ function render(dt) {
   ctx.save();
   ctx.translate(-camera.x, -camera.y);
 
-  drawSkyAndSun();
+  drawSkyCloudsAndBirds(dt);
+  drawBackWaveLayer();
   drawOceanBodyAndDepthGradient();
   drawUnderwaterLightRays();
   drawSeashoreAndBoyWithKite();
   drawSeafloorDetails();
+  drawAmbientMinnows(dt);
   drawUnderwaterParticles(dt);
 
-  // Render active bespoke reveals behind/around fishes
+  // Bespoke reveals for each of the 7 ordered fishes
   drawEducationTimelineReveal(dt);
-  drawInterestsTabletsReveal(dt);
+  drawInterestsJellyLanternsReveal(dt); // Floating bioluminescent lanterns (no table!)
   drawSkillsBubblesReveal(dt);
   drawSonarBeamsReveal(dt);
   drawAchievementsChestReveal(dt);
@@ -600,11 +634,14 @@ function render(dt) {
 
   drawFishes(dt);
   drawShark();
+  drawBoatRipples();
   drawOldManAndBoat();
   drawWaterSurfaceLine();
   drawSplashes(dt);
 
   ctx.restore();
+
+  drawDepthAtmosphereVignette();
   updateDomOverlayPositions();
 }
 
@@ -615,7 +652,6 @@ function drawEducationTimelineReveal(dt) {
   rev.progress = Math.min(1, rev.progress + dt * 1.4);
 
   const eduFish = fishes[0];
-  // Fish mouth position
   const mouthX = eduFish.x + eduFish.dir * 52 * eduFish.size;
   const mouthY = eduFish.y + 2;
 
@@ -626,7 +662,6 @@ function drawEducationTimelineReveal(dt) {
   const totalSpan = Math.max(240, items.length * 165) * rev.progress;
   const dir = eduFish.x > 480 ? -1 : 1;
 
-  // Glowing golden-white silk thread unspooling from fish mouth
   ctx.save();
   ctx.strokeStyle = '#ffeaa7';
   ctx.lineWidth = 2.5;
@@ -644,7 +679,6 @@ function drawEducationTimelineReveal(dt) {
   ctx.stroke();
   ctx.restore();
 
-  // Timeline knots & cards hanging along the thread in chronological order
   items.forEach((item, i) => {
     const ratio = (i + 0.65) / (items.length + 0.3);
     if (rev.progress < ratio * 0.8) return;
@@ -652,13 +686,11 @@ function drawEducationTimelineReveal(dt) {
     const kx = mouthX + dir * totalSpan * ratio;
     const ky = mouthY + 38 * Math.sin(ratio * Math.PI * 0.65) + Math.sin(waveState.phase * 1.5 + ratio * 6) * 5;
 
-    // Thread knot
     ctx.fillStyle = '#feca57';
     ctx.beginPath();
     ctx.arc(kx, ky, 6, 0, Math.PI * 2);
     ctx.fill();
 
-    // Hanging tag card
     const cardW = 148;
     const cardH = 88;
     const cx = kx - cardW / 2;
@@ -691,61 +723,66 @@ function drawEducationTimelineReveal(dt) {
   });
 }
 
-// --- BESPOKE REVEAL #2: INTERESTS SUNKEN PARCHMENT / STONE TABLETS ON ROCKY LEDGE ---
-function drawInterestsTabletsReveal(dt) {
+// --- BESPOKE REVEAL #2: INTERESTS FLOATING BIOLUMINESCENT JELLYFISH LANTERNS ---
+function drawInterestsJellyLanternsReveal(dt) {
   const rev = activeReveals.interests;
   if (!rev.open) return;
   rev.progress = Math.min(1, rev.progress + dt * 1.8);
 
   const intFish = fishes[1];
-  const ledgeY = intFish.depthY + 145;
-  const startX = 180;
-
-  // Underwater rocky ledge
-  ctx.fillStyle = '#1b2838';
-  ctx.beginPath();
-  ctx.moveTo(startX - 40, ledgeY + 25);
-  ctx.quadraticCurveTo(startX + 260, ledgeY - 8, startX + 640, ledgeY + 28);
-  ctx.lineTo(startX + 620, ledgeY + 58);
-  ctx.lineTo(startX - 20, ledgeY + 55);
-  ctx.closePath();
-  ctx.fill();
-
   const items = rev.items.length
     ? rev.items
     : [{ title: 'No Interests Yet', description: 'Add interests in /admin' }];
 
   items.forEach((item, i) => {
-    const tx = startX + 30 + i * 185;
-    const rise = (1 - rev.progress) * 40;
-    const ty = ledgeY - 92 + rise;
+    const spreadX = (i - (items.length - 1) / 2) * 185;
+    const jx = intFish.x + spreadX * rev.progress;
+    const jy = intFish.depthY + 115 + Math.sin(waveState.phase * 1.4 + i * 1.3) * 10;
 
     ctx.save();
-    ctx.translate(tx, ty);
-    ctx.rotate((i % 2 === 0 ? -1 : 1) * 0.04);
+    ctx.translate(jx, jy);
 
-    // Carved stone/parchment tablet
-    ctx.fillStyle = '#d8c39e';
-    ctx.strokeStyle = '#7f6a49';
-    ctx.lineWidth = 2.5;
+    // Flowing glowing tentacles underneath
+    ctx.strokeStyle = 'rgba(255, 159, 243, 0.55)';
+    ctx.lineWidth = 2;
+    for (let t = -2; t <= 2; t++) {
+      ctx.beginPath();
+      ctx.moveTo(t * 14, 34);
+      ctx.quadraticCurveTo(
+        t * 14 + Math.sin(waveState.phase * 2 + t) * 10,
+        56,
+        t * 12 - Math.sin(waveState.phase * 2 + t) * 8,
+        78
+      );
+      ctx.stroke();
+    }
+
+    // Translucent Bell / Dome (No table or rock!)
+    const bellGrad = ctx.createRadialGradient(0, -15, 8, 0, 5, 85);
+    bellGrad.addColorStop(0, 'rgba(255, 184, 222, 0.45)');
+    bellGrad.addColorStop(1, 'rgba(131, 56, 236, 0.28)');
+
+    ctx.fillStyle = bellGrad;
+    ctx.strokeStyle = 'rgba(255, 159, 243, 0.85)';
+    ctx.lineWidth = 1.8;
     ctx.beginPath();
-    ctx.roundRect(0, 0, 165, 102, [18, 18, 6, 6]);
+    ctx.moveTo(-78, 34);
+    ctx.bezierCurveTo(-82, -45, 82, -45, 78, 34);
+    ctx.quadraticCurveTo(0, 42, -78, 34);
+    ctx.closePath();
     ctx.fill();
     ctx.stroke();
 
-    // Inner carved border
-    ctx.strokeStyle = 'rgba(92, 71, 40, 0.45)';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(7, 7, 151, 88);
+    // Title & Description floating inside the jellyfish glow
+    ctx.fillStyle = '#ffe5f4';
+    ctx.font = '700 12px "Segoe UI", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(truncateText(item.title || '', 21), 0, -4);
 
-    ctx.fillStyle = '#3b2814';
-    ctx.font = '700 13px Georgia, serif';
-    ctx.textAlign = 'left';
-    ctx.fillText(truncateText(item.title || '', 20), 14, 28);
+    ctx.fillStyle = '#e0e7ff';
+    ctx.font = '10.5px "Segoe UI", sans-serif';
+    wrapCanvasTextCentered(ctx, item.description || '', 0, 12, 134, 13, 2);
 
-    ctx.fillStyle = '#4a3520';
-    ctx.font = '11px Georgia, serif';
-    wrapCanvasText(ctx, item.description || '', 14, 48, 138, 15, 3);
     ctx.restore();
   });
 }
@@ -771,7 +808,6 @@ function drawSkillsBubblesReveal(dt) {
     ctx.save();
     ctx.translate(bx, by);
 
-    // Translucent iridescent bubble
     const grad = ctx.createRadialGradient(-r * 0.3, -r * 0.3, r * 0.1, 0, 0, r);
     grad.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
     grad.addColorStop(0.7, 'rgba(72, 219, 251, 0.22)');
@@ -785,13 +821,11 @@ function drawSkillsBubblesReveal(dt) {
     ctx.fill();
     ctx.stroke();
 
-    // Specular bubble highlight
     ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
     ctx.beginPath();
     ctx.ellipse(-r * 0.36, -r * 0.36, r * 0.2, r * 0.1, -0.6, 0, Math.PI * 2);
     ctx.fill();
 
-    // Skill text inside bubble
     ctx.fillStyle = '#ffffff';
     ctx.font = '700 12px "Segoe UI", sans-serif';
     ctx.textAlign = 'center';
@@ -809,7 +843,7 @@ function drawSkillsBubblesReveal(dt) {
   });
 }
 
-// --- BESPOKE REVEAL #4: SONAR SWEEP RINGS BEHIND PROJECT CARDS ---
+// --- BESPOKE REVEAL #4: SONAR SWEEP RINGS ---
 function drawSonarBeamsReveal(dt) {
   const rev = activeReveals.projects;
   if (!rev.open) return;
@@ -826,7 +860,7 @@ function drawSonarBeamsReveal(dt) {
   ctx.restore();
 }
 
-// --- BESPOKE REVEAL #5: ACHIEVEMENTS SUNKEN TREASURE CHEST & GOLDEN MEDALLIONS ---
+// --- BESPOKE REVEAL #5: ACHIEVEMENTS SUNKEN TREASURE CHEST ---
 function drawAchievementsChestReveal(dt) {
   const rev = activeReveals.achievements;
   if (!rev.open) return;
@@ -835,13 +869,11 @@ function drawAchievementsChestReveal(dt) {
   const cx = rev.chestX;
   const cy = rev.chestY;
 
-  // Rocky outcrop under the chest
   ctx.fillStyle = '#102033';
   ctx.beginPath();
   ctx.ellipse(cx, cy + 24, 95, 18, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Golden light beams radiating from open chest
   const beamGrad = ctx.createLinearGradient(cx, cy - 10, cx, cy - 160);
   beamGrad.addColorStop(0, 'rgba(255, 215, 0, 0.45)');
   beamGrad.addColorStop(1, 'rgba(255, 215, 0, 0)');
@@ -854,7 +886,6 @@ function drawAchievementsChestReveal(dt) {
   ctx.closePath();
   ctx.fill();
 
-  // Treasure Chest Base
   ctx.fillStyle = '#6f3e1d';
   ctx.strokeStyle = '#f59e0b';
   ctx.lineWidth = 2.5;
@@ -863,7 +894,6 @@ function drawAchievementsChestReveal(dt) {
   ctx.fill();
   ctx.stroke();
 
-  // Open Chest Lid tilted back
   ctx.save();
   ctx.translate(cx - 34, cy - 12);
   ctx.rotate(-0.48 * rev.progress);
@@ -874,7 +904,6 @@ function drawAchievementsChestReveal(dt) {
   ctx.stroke();
   ctx.restore();
 
-  // Floating Golden Achievement Medallions
   const items = rev.items.length
     ? rev.items
     : [{ title: 'No Achievements Yet', issuer: 'Add in /admin', date: '' }];
@@ -884,7 +913,6 @@ function drawAchievementsChestReveal(dt) {
     const mx = cx + spreadX * rev.progress;
     const my = cy - 95 - (i % 2) * 32 + Math.sin(waveState.phase * 1.5 + i) * 5;
 
-    // Gold shimmer border card
     ctx.fillStyle = 'rgba(26, 20, 8, 0.9)';
     ctx.strokeStyle = '#fbbf24';
     ctx.lineWidth = 2;
@@ -908,7 +936,7 @@ function drawAchievementsChestReveal(dt) {
   });
 }
 
-// --- BESPOKE REVEAL #6: DIGITAL FOOTPRINTS CONSTELLATION FILAMENTS ---
+// --- BESPOKE REVEAL #6: DIGITAL FOOTPRINTS CONSTELLATION ---
 function drawFootprintConstellationReveal(dt) {
   const rev = activeReveals.digitalFootprints;
   if (!rev.open || rev.orbs.length < 2) return;
@@ -927,7 +955,7 @@ function drawFootprintConstellationReveal(dt) {
   ctx.restore();
 }
 
-// --- BESPOKE REVEAL #7: MESSAGE IN A BOTTLE FALLING IN THE ABYSS ---
+// --- BESPOKE REVEAL #7: MESSAGE IN A BOTTLE ---
 function drawArticlesBottlesReveal(dt) {
   const rev = activeReveals.articles;
   if (!rev.open) return;
@@ -949,11 +977,9 @@ function drawArticlesBottlesReveal(dt) {
     ctx.translate(b.x, b.y);
     ctx.rotate(b.angle + Math.sin(waveState.phase + b.phase) * 0.08);
 
-    // Glass Bottle Glow
     ctx.shadowColor = '#74b9ff';
     ctx.shadowBlur = 14;
 
-    // Bottle Body
     ctx.fillStyle = 'rgba(129, 236, 236, 0.34)';
     ctx.strokeStyle = '#81ecec';
     ctx.lineWidth = 1.8;
@@ -962,16 +988,13 @@ function drawArticlesBottlesReveal(dt) {
     ctx.fill();
     ctx.stroke();
 
-    // Bottle Neck
     ctx.fillRect(-6, -30, 12, 12);
     ctx.strokeRect(-6, -30, 12, 12);
 
-    // Cork Stopper
     ctx.shadowBlur = 0;
     ctx.fillStyle = '#d4a373';
     ctx.fillRect(-5, -35, 10, 6);
 
-    // Rolled Parchment Scroll Visible Inside Bottle
     ctx.fillStyle = '#f9f1dc';
     ctx.save();
     ctx.rotate(0.22);
@@ -984,7 +1007,6 @@ function drawArticlesBottlesReveal(dt) {
     ctx.stroke();
     ctx.restore();
 
-    // Floating Label Tag under Bottle
     ctx.rotate(-(b.angle + Math.sin(waveState.phase + b.phase) * 0.08));
     ctx.fillStyle = '#ffeaa7';
     ctx.font = '700 11px "Segoe UI", sans-serif';
@@ -999,20 +1021,111 @@ function drawArticlesBottlesReveal(dt) {
 }
 
 // ==========================================
-// 9. EXISTING WORLD RENDERERS
+// 9. LIVELY SKY, WAVES, RIPPLES & DEPTH ATMOSPHERE
 // ==========================================
-function drawSkyAndSun() {
-  const skyGrad = ctx.createLinearGradient(0, -450, 0, 20);
-  skyGrad.addColorStop(0, '#4fa3e3');
-  skyGrad.addColorStop(0.65, '#8fd3f4');
-  skyGrad.addColorStop(1, '#d4f1f9');
+function drawSkyCloudsAndBirds(dt) {
+  const skyGrad = ctx.createLinearGradient(0, -600, 0, 20);
+  skyGrad.addColorStop(0, '#3a86ff');
+  skyGrad.addColorStop(0.55, '#8ecae6');
+  skyGrad.addColorStop(1, '#e0fbfc');
   ctx.fillStyle = skyGrad;
-  ctx.fillRect(WORLD_BOUNDS.minX - 200, -500, 3200, 560);
+  ctx.fillRect(WORLD_BOUNDS.minX - 200, -620, 3200, 680);
 
-  ctx.fillStyle = 'rgba(255, 244, 180, 0.85)';
+  // Glowing Sun with soft halo
+  const sunGrad = ctx.createRadialGradient(840, -210, 15, 840, -210, 130);
+  sunGrad.addColorStop(0, 'rgba(255, 250, 205, 0.95)');
+  sunGrad.addColorStop(0.4, 'rgba(255, 230, 140, 0.45)');
+  sunGrad.addColorStop(1, 'rgba(255, 230, 140, 0)');
+  ctx.fillStyle = sunGrad;
   ctx.beginPath();
-  ctx.arc(820, -190, 52, 0, Math.PI * 2);
+  ctx.arc(840, -210, 130, 0, Math.PI * 2);
   ctx.fill();
+
+  // Drifting Fluffy Clouds
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+  for (const c of clouds) {
+    c.x += c.speed * dt;
+    if (c.x > WORLD_BOUNDS.maxX + 200) c.x = WORLD_BOUNDS.minX - 200;
+    ctx.save();
+    ctx.translate(c.x, c.y);
+    ctx.scale(c.scale, c.scale);
+    ctx.beginPath();
+    ctx.arc(0, 0, 26, 0, Math.PI * 2);
+    ctx.arc(24, -6, 32, 0, Math.PI * 2);
+    ctx.arc(54, 0, 24, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Soaring Seabirds
+  ctx.strokeStyle = 'rgba(30, 41, 59, 0.55)';
+  ctx.lineWidth = 1.8;
+  for (const b of seabirds) {
+    b.x += b.speed * dt;
+    b.phase += dt * 6;
+    if (b.x > WORLD_BOUNDS.maxX + 150) b.x = -300;
+    const flap = Math.sin(b.phase) * 5;
+    ctx.beginPath();
+    ctx.moveTo(b.x - 10, b.y + flap);
+    ctx.quadraticCurveTo(b.x - 4, b.y - 5, b.x, b.y);
+    ctx.quadraticCurveTo(b.x + 4, b.y - 5, b.x + 10, b.y + flap);
+    ctx.stroke();
+  }
+}
+
+function drawBackWaveLayer() {
+  // Distant darker swell behind the boat for 3D water depth
+  ctx.fillStyle = 'rgba(13, 126, 168, 0.45)';
+  ctx.beginPath();
+  ctx.moveTo(-60, 40);
+  for (let x = -60; x <= WORLD_BOUNDS.maxX + 200; x += 24) {
+    const y = Math.sin(x * 0.01 + waveState.phase * 0.8 + 1.5) * (waveState.currentAmplitude * 0.75) - 4;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(WORLD_BOUNDS.maxX + 200, 120);
+  ctx.lineTo(-60, 120);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawBoatRipples() {
+  for (const r of boatRipples) {
+    ctx.strokeStyle = `rgba(224, 251, 252, ${r.alpha})`;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.ellipse(r.x, r.y, r.rx, r.ry, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+}
+
+function drawAmbientMinnows(dt) {
+  ctx.fillStyle = 'rgba(186, 230, 253, 0.22)';
+  for (const m of ambientMinnows) {
+    m.x += m.speed * dt;
+    m.phase += dt * 4;
+    if (m.x > 1350) m.x = 80;
+    if (m.x < 80) m.x = 1350;
+
+    ctx.save();
+    ctx.translate(m.x, m.y + Math.sin(m.phase) * 4);
+    ctx.scale(m.speed >= 0 ? 1 : -1, 1);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, m.size * 1.8, m.size * 0.7, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+function drawDepthAtmosphereVignette() {
+  // Deep-sea submerged vignette that intensifies as the user scrolls deeper
+  const depthFactor = Math.max(0, Math.min(0.65, camera.y / 3200));
+  if (depthFactor <= 0.02) return;
+
+  const vig = ctx.createRadialGradient(width / 2, height / 2, height * 0.25, width / 2, height / 2, width * 0.75);
+  vig.addColorStop(0, 'rgba(0, 0, 0, 0)');
+  vig.addColorStop(1, `rgba(1, 6, 16, ${depthFactor})`);
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, width, height);
 }
 
 function drawOceanBodyAndDepthGradient() {
@@ -1138,17 +1251,17 @@ function drawSeashoreAndBoyWithKite() {
   const endX = kiteScene.kiteX;
   const endY = kiteScene.kiteY;
 
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.88)';
   ctx.lineWidth = 1.6;
   ctx.beginPath();
   ctx.moveTo(startX, startY);
-  const segments = 24;
+  const segments = 36;
   for (let i = 1; i <= segments; i++) {
     const t = i / segments;
     const baseX = startX + (endX - startX) * t;
     const baseY = startY + (endY - startY) * t;
     const envelope = Math.sin(t * Math.PI);
-    const offset = Math.sin(t * 10 - kiteScene.wobblePhase) * kiteScene.wobbleAmp * envelope;
+    const offset = Math.sin(t * 12 - kiteScene.wobblePhase) * kiteScene.wobbleAmp * envelope;
     ctx.lineTo(baseX - offset * 0.7, baseY + offset * 0.7);
   }
   ctx.stroke();
@@ -1383,8 +1496,8 @@ function drawSeafloorDetails() {
   ctx.fillStyle = '#010811';
   ctx.fillRect(-100, floorY - 30, 1750, 250);
 
-  for (let i = 0; i < 18; i++) {
-    const kx = 120 + i * 75;
+  for (let i = 0; i < 22; i++) {
+    const kx = 100 + i * 65;
     const kh = 70 + (i % 4) * 35;
     ctx.strokeStyle = 'rgba(16, 95, 85, 0.45)';
     ctx.lineWidth = 5;
@@ -1423,7 +1536,6 @@ function drawUnderwaterParticles(dt) {
 function drawFishes(dt) {
   for (const fish of fishes) {
     fish.phase += dt * 2.4;
-    // Slow down swimming slightly while open so user can read comfortably
     const swimMult = fish.isOpen ? 0.25 : 1;
     fish.x += fish.speed * 42 * swimMult * dt;
     fish.y = fish.depthY + Math.sin(fish.phase * 0.7) * 10;
@@ -1527,7 +1639,7 @@ function truncateText(str, max) {
   return str.length > max ? str.slice(0, max - 1) + '…' : str;
 }
 
-function wrapCanvasText(context, text, x, y, maxWidth, lineHeight, maxLines) {
+function wrapCanvasTextCentered(context, text, x, y, maxWidth, lineHeight, maxLines) {
   const words = text.split(' ');
   let line = '';
   let lineCount = 0;
