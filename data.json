@@ -1,0 +1,66 @@
+{
+  "education": [
+    {
+      "id": "edu-1",
+      "institution": "University of Visvesvaraya College of Engineering",
+      "degree": "B.Tech in Computer Science and Engineering",
+      "year": "2026 - 2030"
+    },
+    {
+      "id": "edu-1795113442138",
+      "institution": "Kendriya Vidyalaya Chamarajanagar",
+      "degree": "1-10th",
+      "year": "20214-2024",
+      "details": ""
+    }
+  ],
+  "interests": [
+    {
+      "id": "int-1",
+      "title": "Literature",
+      "description": "Inspired by classics like The Old Man and the Sea and The Kite Runner."
+    }
+  ],
+  "skills": [
+    {
+      "id": "skl-1",
+      "name": "JavaScript & HTML5 Canvas",
+      "level": "Advanced",
+      "category": "Frontend"
+    }
+  ],
+  "projects": [
+    {
+      "id": "prj-1",
+      "title": "Interactive Portfolio",
+      "techStack": "Node.js, Express, HTML5 Canvas, REST API",
+      "description": "A 2D movable world combining literary themes with dynamic portfolio management.",
+      "link": "https://github.com/ikeerthanaM/portfolio"
+    }
+  ],
+  "achievements": [
+    {
+      "id": "ach-1",
+      "title": "Web Development Track — Task 2",
+      "issuer": "Marvel Batch 9",
+      "date": "2026",
+      "description": "Built a full-stack dynamic portfolio and admin dashboard."
+    }
+  ],
+  "digitalFootprints": [
+    {
+      "id": "df-1",
+      "platform": "GitHub",
+      "handle": "@yourusername",
+      "url": "https://github.com/yourusername"
+    }
+  ],
+  "articles": [
+    {
+      "id": "art-1",
+      "title": "Why I Built My Portfolio Like an Ocean",
+      "date": "2026-11-19",
+      "content": "<p>Depth of knowledge isn't a flat list—it's an ocean you dive into...</p>"
+    }
+  ]
+}

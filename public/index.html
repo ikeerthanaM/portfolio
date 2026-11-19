@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Ocean Portfolio</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <canvas id="ocean-canvas"></canvas>
+
+  <!-- Interactive Overlay Layer (for clickable project links, pearls, and uncorked article reader) -->
+  <div id="world-overlay"></div>
+
+  <!-- Full Rich-Text Reader Modal when a Message-in-a-Bottle is uncorked -->
+  <div id="article-reader" class="hidden">
+    <div class="parchment-scroll">
+      <button id="close-reader" aria-label="Close bottle">✕ Cork Bottle</button>
+      <div class="bottle-tag">Message from the Abyss</div>
+      <h1 id="reader-title"></h1>
+      <div id="reader-date"></div>
+      <div id="reader-body" class="ql-content"></div>
+    </div>
+  </div>
+
+  <script src="/world.js"></script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #87ceeb;
+  touch-action: none;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+#ocean-canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  cursor: grab;
+}
+
+#ocean-canvas:active {
+  cursor: grabbing;
+}
+
+/* World-space interactive cards (Sonar Projects & Plankton Links) */
+#world-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 10;
+}
+
+/* Sonar / Compass Project Card */
+.sonar-card {
+  position: absolute;
+  width: 270px;
+  background: rgba(4, 28, 48, 0.88);
+  border: 1.5px solid #00f5d4;
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: #e0fbfc;
+  box-shadow: 0 0 24px rgba(0, 245, 212, 0.28), inset 0 0 18px rgba(0, 245, 212, 0.12);
+  backdrop-filter: blur(6px);
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
+  animation: sonarPop 0.35s cubic-bezier(0.2, 1.3, 0.4, 1);
+}
+
+@keyframes sonarPop {
+  from { opacity: 0; transform: translate(-50%, -40%) scale(0.82); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.sonar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #00f5d4;
+  margin-bottom: 6px;
+}
+
+.sonar-ping {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #00f5d4;
+  box-shadow: 0 0 8px #00f5d4;
+  animation: pulseDot 1.4s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.4; }
+}
+
+.sonar-card h3 {
+  font-size: 1rem;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.sonar-tech {
+  font-size: 0.78rem;
+  color: #72efdd;
+  margin-bottom: 8px;
+}
+
+.sonar-desc {
+  font-size: 0.83rem;
+  line-height: 1.4;
+  color: #cbd5e1;
+  margin-bottom: 10px;
+}
+
+.sonar-link {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(0, 245, 212, 0.16);
+  border: 1px solid #00f5d4;
+  color: #00f5d4;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.sonar-link:hover {
+  background: #00f5d4;
+  color: #041c30;
+}
+
+/* Digital Footprint Glowing Pearl Orb */
+.pearl-orb {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 118px;
+  height: 118px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.92), rgba(162, 155, 254, 0.45) 45%, rgba(108, 92, 231, 0.25) 75%, rgba(15, 23, 42, 0.6));
+  border: 1.5px solid rgba(224, 215, 255, 0.85);
+  box-shadow: 0 0 25px rgba(162, 155, 254, 0.65), inset 0 0 14px rgba(255, 255, 255, 0.6);
+  color: #ffffff;
+  text-decoration: none;
+  text-align: center;
+  padding: 10px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pearl-orb:hover {
+  transform: translate(-50%, -50%) scale(1.12);
+  box-shadow: 0 0 36px rgba(224, 215, 255, 0.95);
+}
+
+.pearl-platform {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.pearl-handle {
+  font-size: 0.72rem;
+  color: #e0e7ff;
+  margin-top: 3px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+  word-break: break-all;
+}
+
+/* Uncorked Message-in-a-Bottle Full Article Reader */
+#article-reader {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 10, 22, 0.84);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 50;
+}
+
+#article-reader.hidden {
+  display: none;
+}
+
+.parchment-scroll {
+  background: linear-gradient(180deg, #f9f1dc 0%, #efe0bd 100%);
+  color: #2b2116;
+  width: 100%;
+  max-width: 740px;
+  max-height: 86vh;
+  overflow-y: auto;
+  border-radius: 14px;
+  padding: 36px 40px;
+  border: 3px solid #c9a66b;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+  position: relative;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+#close-reader {
+  position: sticky;
+  top: 0;
+  float: right;
+  background: #5c3a21;
+  color: #fdf6e3;
+  border: none;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+#close-reader:hover {
+  background: #3e2513;
+}
+
+.bottle-tag {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #8c5a2b;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+#reader-title {
+  font-size: 1.85rem;
+  color: #1f160d;
+  margin-bottom: 6px;
+  line-height: 1.25;
+}
+
+#reader-date {
+  font-size: 0.88rem;
+  color: #6e5236;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed #b89660;
+}
+
+.ql-content {
+  font-size: 1.04rem;
+  line-height: 1.72;
+  color: #2b2116;
+}
+
+.ql-content h1, .ql-content h2, .ql-content h3 {
+  margin: 16px 0 8px;
+  color: #1f160d;
+}
+
+.ql-content p {
+  margin-bottom: 12px;
+}
+
+.ql-content ul, .ql-content ol {
+  margin: 10px 0 14px 24px;
+}
+
+.ql-content blockquote {
+  border-left: 4px solid #9c6644;
+  padding-left: 14px;
+  color: #5c3a21;
+  font-style: italic;
+  margin: 12px 0;
+}
