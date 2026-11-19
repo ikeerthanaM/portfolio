@@ -1,73 +1,80 @@
 {
+  "profile": [
+    {
+      "id": "prof-1",
+      "fullName": "Keerthana M.",
+      "userName": "iKeerthanaM"
+    }
+  ],
   "education": [
     {
-      "id": "edu-1",
-      "institution": "University of Visvesvaraya College of Engineering",
-      "degree": "B.Tech in Computer Science and Engineering",
-      "year": "2026 - 2030"
-    },
-    {
-      "id": "edu-1795113442138",
+      "id": "edu-1795121213171",
       "institution": "Kendriya Vidyalaya Chamarajanagar",
       "degree": "1-10th",
-      "year": "20214-2024",
+      "year": "2014-2024",
+      "details": ""
+    },
+    {
+      "id": "edu-1795121310638",
+      "institution": "University of Visvesvaraya College of Engineering",
+      "degree": "BTech in Computer Science and Engineering",
+      "year": "2026-2030",
       "details": ""
     }
   ],
-  "interests": [
-    {
-      "id": "int-1",
-      "title": "Literature",
-      "description": "Inspired by classics like The Old Man and the Sea and The Kite Runner."
-    }
-  ],
+  "interests": [],
   "skills": [
     {
-      "id": "skl-1",
-      "name": "JavaScript & HTML5 Canvas",
-      "level": "Advanced",
-      "category": "Frontend"
+      "id": "ski-1795121363916",
+      "name": "vibe coding",
+      "category": "Frontend and Backend",
+      "level": "Intermediate"
+    },
+    {
+      "id": "ski-1795122258281",
+      "name": "vide/image editing",
+      "category": "long or short form",
+      "level": "Beginner"
     }
   ],
   "projects": [
     {
-      "id": "prj-1",
-      "title": "Interactive Portfolio",
-      "techStack": "Node.js, Express, HTML5 Canvas, REST API",
-      "description": "A 2D movable world combining literary themes with dynamic portfolio management.",
-      "link": "https://github.com/ikeerthanaM/portfolio"
-    }
-  ],
-  "achievements": [
+      "id": "pro-1795121514707",
+      "title": "Portfolio",
+      "techStack": "javascript, css, html",
+      "description": "Created an interactive portfolio inspired by two of my favourite books for Marvel Task 2",
+      "link": "https://github.com/ikeerthanaM"
+    },
     {
-      "id": "ach-1",
-      "title": "Web Development Track — Task 2",
-      "issuer": "Marvel Batch 9",
-      "date": "2026",
-      "description": "Built a full-stack dynamic portfolio and admin dashboard."
+      "id": "pro-1795121724637",
+      "title": "Bankism",
+      "techStack": "json,",
+      "description": "Designed and built an Ai friendly firewall that screens banking requests before any money moves. This was my submission for PromtWars",
+      "link": "https://bankism-2t8d.onrender.com"
+    },
+    {
+      "id": "pro-1795121957748",
+      "title": "Hostle-Hub",
+      "techStack": "javascript, html, css",
+      "description": "A digital attendance, checkin chckout and food poll tracker. Also have the additional feature of ananamous chat and complains.",
+      "link": "https://hostel-hub-11c3.onrender.com"
     }
   ],
+  "achievements": [],
   "digitalFootprints": [
     {
-      "id": "df-1",
-      "platform": "GitHub",
-      "handle": "@yourusername",
-      "url": "https://github.com/yourusername"
+      "id": "dig-1795122378420",
+      "platform": "Substack",
+      "handle": "polyglotspen",
+      "url": "https://substack.com/@polyglotspen"
     }
   ],
   "articles": [
     {
-      "id": "art-1",
-      "title": "Why I Built My Portfolio Like an Ocean",
+      "id": "art-1795122028725",
+      "title": "The story behind this UI: in my portfolio",
       "date": "2026-11-19",
-      "content": "<p>Depth of knowledge isn't a flat list—it's an ocean you dive into...</p>"
+      "content": "<p><br></p>"
     }
   ]
 }
-"profile": [
-  {
-    "id": "prof-1",
-    "fullName": "Keerthana M."
-    "userName": "iKeerthanaM"
-  }
-]

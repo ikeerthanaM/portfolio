@@ -4,8 +4,14 @@ let editingId = null;
 let portfolioData = {};
 let quillInstance = null;
 
-// Field schemas for each of the 7 ordered depth categories
 const SECTION_SCHEMAS = {
+  profile: {
+    label: 'Name & Handle',
+    fields: [
+      { name: 'fullName', label: 'Your Full Name (Written in Sand)', type: 'text', required: true },
+      { name: 'handle', label: 'Username / Handle (Floating Screen Edge)', type: 'text', required: true }
+    ]
+  },
   education: {
     label: 'Education',
     fields: [
@@ -66,7 +72,6 @@ const SECTION_SCHEMAS = {
   }
 };
 
-// DOM References
 const loginScreen = document.getElementById('login-screen');
 const dashboard = document.getElementById('dashboard');
 const loginForm = document.getElementById('login-form');
@@ -85,7 +90,6 @@ function showToast(msg) {
   setTimeout(() => { toast.style.display = 'none'; }, 2500);
 }
 
-// Check if already logged in during session
 if (adminPassword) {
   verifyAndUnlock(adminPassword);
 }
@@ -126,7 +130,6 @@ document.getElementById('logout-btn').addEventListener('click', () => {
   location.reload();
 });
 
-// Tab switching
 document.getElementById('section-tabs').addEventListener('click', (e) => {
   if (!e.target.classList.contains('tab-btn')) return;
   document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
@@ -153,7 +156,6 @@ function renderSection() {
   formTitle.textContent = editingId ? `Edit ${schema.label} Entry` : `Add New ${schema.label} Entry`;
   listTitle.textContent = `Saved ${schema.label} (${(portfolioData[currentSection] || []).length})`;
 
-  // Build form inputs
   formFieldsContainer.innerHTML = '';
   quillInstance = null;
 
@@ -191,7 +193,6 @@ function renderSection() {
     formFieldsContainer.appendChild(group);
   });
 
-  // Initialize Quill if Articles tab is active
   if (currentSection === 'articles') {
     quillInstance = new Quill('#quill-editor', {
       theme: 'snow',
@@ -225,8 +226,8 @@ function renderItemsList() {
     const card = document.createElement('div');
     card.className = 'item-card';
 
-    const heading = item.title || item.institution || item.name || item.platform || 'Entry';
-    const sub = item.degree || item.category || item.techStack || item.issuer || item.handle || item.date || '';
+    const heading = item.fullName || item.title || item.institution || item.name || item.platform || 'Entry';
+    const sub = item.handle || item.degree || item.category || item.techStack || item.issuer || item.date || '';
     const desc = item.details || item.description || item.url || '';
 
     card.innerHTML = `
@@ -265,7 +266,7 @@ function startEditing(item) {
 dynamicForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const schema = SECTION_SCHEMAS[currentSection];
-  const payload = {};
+  const payload = { _adminPassword: adminPassword };
 
   schema.fields.forEach((field) => {
     if (field.type === 'richtext' && quillInstance) {
@@ -276,7 +277,10 @@ dynamicForm.addEventListener('submit', async (e) => {
     }
   });
 
-  const url = editingId ? `/api/${currentSection}/${editingId}` : `/api/${currentSection}`;
+  const encodedPass = encodeURIComponent(adminPassword);
+  const url = editingId
+    ? `/api/${currentSection}/${editingId}?password=${encodedPass}`
+    : `/api/${currentSection}?password=${encodedPass}`;
   const method = editingId ? 'PUT' : 'POST';
 
   const res = await fetch(url, {
@@ -295,13 +299,15 @@ dynamicForm.addEventListener('submit', async (e) => {
     await loadAllPortfolioData();
     renderSection();
   } else {
-    alert('Failed to save. Check your admin session.');
+    const errText = await res.text();
+    alert('Save failed (HTTP ' + res.status + '): ' + errText);
   }
 });
 
 async function deleteEntry(id) {
   if (!confirm('Delete this entry?')) return;
-  const res = await fetch(`/api/${currentSection}/${id}`, {
+  const encodedPass = encodeURIComponent(adminPassword);
+  const res = await fetch(`/api/${currentSection}/${id}?password=${encodedPass}`, {
     method: 'DELETE',
     headers: { 'x-admin-password': adminPassword }
   });
