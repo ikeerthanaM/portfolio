@@ -1203,10 +1203,11 @@ function drawSeashoreAndBoyWithKite() {
   ctx.ellipse(-75 + Math.sin(waveState.phase) * 14, -2, 42, 6, 0.12, 0, Math.PI * 2);
   ctx.fill();
 // Name etched realistically into the golden seashore sand
+  // Name etched realistically into the golden seashore sand
   const sandName = (portfolioData.profile && portfolioData.profile[0]?.fullName) || 'Keerthana M';
   ctx.save();
-  ctx.translate(-265, -24);
-  ctx.rotate(-0.08);
+  ctx.translate(-290, 22);
+  ctx.rotate(0.05);
   ctx.font = 'italic 700 22px Georgia, serif';
   ctx.textAlign = 'center';
 
