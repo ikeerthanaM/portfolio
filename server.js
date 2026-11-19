@@ -11,6 +11,7 @@ const DATA_FILE = path.join(__dirname, 'data.json');
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'ocean123';
 
 const VALID_SECTIONS = [
+  'profile',
   'education',
   'interests',
   'skills',

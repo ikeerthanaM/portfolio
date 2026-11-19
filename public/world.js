@@ -642,6 +642,7 @@ function render(dt) {
   ctx.restore();
 
   drawDepthAtmosphereVignette();
+  drawFloatingEdgeSignature();
   updateDomOverlayPositions();
 }
 
@@ -1201,6 +1202,22 @@ function drawSeashoreAndBoyWithKite() {
   ctx.beginPath();
   ctx.ellipse(-75 + Math.sin(waveState.phase) * 14, -2, 42, 6, 0.12, 0, Math.PI * 2);
   ctx.fill();
+// Name etched realistically into the golden seashore sand
+  const sandName = (portfolioData.profile && portfolioData.profile[0]?.fullName) || 'Keerthana M';
+  ctx.save();
+  ctx.translate(-265, -24);
+  ctx.rotate(-0.08);
+  ctx.font = 'italic 700 22px Georgia, serif';
+  ctx.textAlign = 'center';
+
+  // Pressed-in shadow edge
+  ctx.fillStyle = 'rgba(110, 82, 34, 0.58)';
+  ctx.fillText(sandName, 0, 0);
+
+  // Sunlit sand highlight rim slightly offset
+  ctx.fillStyle = 'rgba(255, 243, 205, 0.45)';
+  ctx.fillText(sandName, 1.2, 1.2);
+  ctx.restore();
 
   const bx = kiteScene.boyX;
   const by = kiteScene.boyY;
@@ -1667,6 +1684,23 @@ function escapeHtml(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+function drawFloatingEdgeSignature() {
+  const handle = (portfolioData.profile && portfolioData.profile[0]?.handle) || 'ikeerthanaM';
+  const floatY = Math.sin(waveState.phase * 0.9) * 3;
+
+  ctx.save();
+  ctx.font = '500 11px "Segoe UI", system-ui, sans-serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'bottom';
+
+  // Soft contrast shadow so it stays legible from bright sky down to dark abyss
+  ctx.fillStyle = 'rgba(2, 10, 22, 0.35)';
+  ctx.fillText(`@${handle}`, width - 15, height - 11 + floatY);
+
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.48)';
+  ctx.fillText(`@${handle}`, width - 16, height - 12 + floatY);
+  ctx.restore();
 }
 
 let lastTime = performance.now();
